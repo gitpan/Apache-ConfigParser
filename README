@@ -1,23 +1,23 @@
-Package Apache::ConfigParser version 0.06
+Package Apache::ConfigParser version 1.00
 
 This is the Apache::ConfigParser package.  This module provides for
 the parsing and manipulation of Apache configuration files.
 
 REQUIREMENTS
 
-   * Perl 5.004_04 or greater.
+   * Perl 5.004_05 or greater.
 
 AVAILABILITY
 
-The latest released version of this package is available from a CPAN
-archive near you in
+The latest released version of this package is available for download
+from a CPAN (Comprehensive Perl Archive Network) archive near you in
 
     http://www.perl.com/CPAN/authors/id/B/BZ/BZAJAC/
 
 The latest beta version of this package is hosted in a Subversion
 repository located at
 
-    http://svn.orcaware.com:8000/repos/trunk/apache_configparser/
+    http://www.orcaware.com/svn/repos/trunk/perl_apache_configparser/
 
 Subversion is an open-source source code management system designed to
 replace CVS.  To get Subversion, see
@@ -30,7 +30,7 @@ and for an overview of Subversion, see
 
 INSTALLATION
 
-In order to use this package you will need Perl version 5.004_04 or
+In order to use this package you will need Perl version 5.004_05 or
 better.  Once that is completed, you install Apache::ConfigParser as you
 would install any perl module library, by running these commands:
 

@@ -1,8 +1,8 @@
 # Apache::ConfigParser: Load Apache configuration file.
 #
-# $HeadURL: http://www.orcaware.com/svn/repos/tags/perl_apache_configparser/1.00/lib/Apache/ConfigParser.pm $
-# $LastChangedRevision: 435 $
-# $LastChangedDate: 2005-03-26 21:48:58 -0800 (Sat, 26 Mar 2005) $
+# $HeadURL: http://www.orcaware.com/svn/repos/perl_apache_configparser/tags/1.01/lib/Apache/ConfigParser.pm $
+# $LastChangedRevision: 511 $
+# $LastChangedDate: 2005-11-22 20:42:24 -0800 (Tue, 22 Nov 2005) $
 # $LastChangedBy: blair@orcaware.com $
 #
 # Copyright (C) 2001-2005 Blair Zajac.  All rights reserved.
@@ -146,7 +146,7 @@ use Apache::ConfigParser::Directive      qw(DEV_NULL
 
 use vars qw(@ISA $VERSION);
 @ISA     = qw(Exporter);
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 # This constant is used throughout the module.
 my $INCORRECT_NUMBER_OF_ARGS = "passed incorrect number of arguments.\n";
@@ -536,9 +536,6 @@ sub parse_file {
     }
   }
 
-  # Get the current node to add these configuration directives to.
-  my $current_node = $self->{current_node};
-
   # Create a new file handle to open this file and open it.
   my $fd = gensym;
   unless (open($fd, $file_or_dir_name)) {
@@ -626,7 +623,7 @@ sub parse_file {
     if (my ($context) = $_ =~ m#^<\s*/\s*([^\s>]+)\s*>\s*$#) {
       # Check if an end context was seen with no start context in the
       # configuration file.
-      my $mother = $current_node->mother;
+      my $mother = $self->{current_node}->mother;
       unless (defined $mother) {
         $self->{errstr} = "'$file_or_dir_name' line $line_number closes " .
                           "context '$context' which was never started";
@@ -635,7 +632,7 @@ sub parse_file {
 
       # Check that the start and end contexts have the same name.
       $context               = lc($context);
-      my $start_context_name = $current_node->name; 
+      my $start_context_name = $self->{current_node}->name; 
       unless ($start_context_name eq $context) {
         $self->{errstr} = "'$file_or_dir_name' line $line_number closes " .
                           "context '$context' that should close context " .
@@ -644,19 +641,19 @@ sub parse_file {
       }
 
       # Move the current node up to the mother node.
-      $current_node = $mother;
+      $self->{current_node} = $mother;
 
       next;
     }
 
     # At this point a new directive or context node will be created.
-    my $new_node = $current_node->new_daughter;
+    my $new_node = $self->{current_node}->new_daughter;
     $new_node->filename($file_or_dir_name);
     $new_node->line_number($line_number);
 
     # If the line begins with <, then it is starting a context.
     if (my ($context, $value) = $_ =~ m#^<\s*(\S+)\s+(.*)>\s*$#) {
-      $context =  lc($context);
+      $context = lc($context);
 
       # Remove any trailing whitespace in the context's value as the
       # above regular expression will match all after the context's
@@ -668,7 +665,7 @@ sub parse_file {
       $new_node->orig_value($value);
 
       # Set the current node to the new context.
-      $current_node = $new_node;
+      $self->{current_node} = $new_node;
 
       next;
     }
@@ -754,7 +751,7 @@ sub parse_file {
     # If this directive is ServerRoot and node is the parent node,
     # then record it now because it is used to make other relative
     # pathnames absolute.
-    if ($directive eq 'serverroot' and !$current_node->mother) {
+    if ($directive eq 'serverroot' and !$self->{current_node}->mother) {
       $self->{server_root} = $values[0];
       next;
     }
@@ -783,23 +780,20 @@ sub parse_file {
     return;
   }
 
-  # Save the current node that directives were being added to.
-  $self->{current_node} = $current_node;
-
   return $self;
 
   # At this point check if all of the context have been closed.  The
   # filename that started the context may not be the current file, so
   # get the filename from the context.
   my $root = $self->{root};
-  while ($current_node != $root) {
-    my $context_name     = $current_node->name;
-    my $attrs            = $current_node->attributes;
+  while ($self->{current_node} != $root) {
+    my $context_name     = $self->{current_node}->name;
+    my $attrs            = $self->{current_node}->attributes;
     my $context_filename = $attrs->{filename};
     my $line_number      = $attrs->{line_number};
     warn "$0: '$context_filename' line $line_number context '$context_name' ",
          "was never closed.\n";
-    $current_node = $current_node->mother;
+    $self->{current_node} = $self->{current_node}->mother;
   }
 
   $self;
@@ -1040,7 +1034,7 @@ sub _dump {
                            " $type";
   $spaces              .=  $comment;
   $seen_ref->{$object}  =  $comment;
-  $dump_ref_count_stack[-1]  +=  1;
+  $dump_ref_count_stack[-1] += 1;
 
   if (UNIVERSAL::isa($object, 'SCALAR')) {
     return ("$spaces $$object");

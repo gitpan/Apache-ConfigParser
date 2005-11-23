@@ -1,8 +1,8 @@
 # Apache::ConfigParser::Directive: A single Apache directive or start context.
 #
-# $HeadURL: http://www.orcaware.com/svn/repos/tags/perl_apache_configparser/1.00/lib/Apache/ConfigParser/Directive.pm $
-# $LastChangedRevision: 435 $
-# $LastChangedDate: 2005-03-26 21:48:58 -0800 (Sat, 26 Mar 2005) $
+# $HeadURL: http://www.orcaware.com/svn/repos/perl_apache_configparser/tags/1.01/lib/Apache/ConfigParser/Directive.pm $
+# $LastChangedRevision: 511 $
+# $LastChangedDate: 2005-11-22 20:42:24 -0800 (Tue, 22 Nov 2005) $
 # $LastChangedBy: blair@orcaware.com $
 #
 # Copyright (C) 2001-2005 Blair Zajac.  All rights reserved.
@@ -19,7 +19,7 @@ use Tree::DAG_Node 1.04;
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 @ISA     = qw(Tree::DAG_Node Exporter);
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 # Determine if the filenames are case sensitive.
 use constant CASE_SENSITIVE_PATH => (! File::Spec->case_tolerant);

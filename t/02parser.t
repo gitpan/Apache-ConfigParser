@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 #
-# $HeadURL: http://www.orcaware.com/svn/repos/tags/perl_apache_configparser/1.00/t/02parser.t $
-# $LastChangedRevision: 429 $
-# $LastChangedDate: 2005-03-24 20:50:28 -0800 (Thu, 24 Mar 2005) $
+# $HeadURL: http://www.orcaware.com/svn/repos/perl_apache_configparser/tags/1.01/t/02parser.t $
+# $LastChangedRevision: 462 $
+# $LastChangedDate: 2005-07-10 22:22:34 -0700 (Sun, 10 Jul 2005) $
 # $LastChangedBy: blair@orcaware.com $
 #
 # Copyright (C) 2001-2005 Blair Zajac.  All rights reserved.
